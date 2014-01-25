@@ -1,0 +1,21 @@
+{
+  "name": "shipper",
+  "version": "0.0.0",
+  "description": "a small app to deploy node apps based off git pushes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "git",
+    "push",
+    "shipit",
+    "deploy"
+  ],
+  "author": "jacob lowe < http://jcbl.ws >",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "pushover": "~1.3.4",
+    "dotenv": "~0.2.3"
+  }
+}
