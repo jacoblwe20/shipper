@@ -1,12 +1,17 @@
 var fs = require('fs'),
 	spawn = require('child_process').spawn,
 	Deps = require('./deps'),
+	stream = require('stream'),
+	Duplex = stream.Duplex,
+	util = require('util'),
 	Startup = require('./startup');
 
 function Deploy ( dir ) {
 	this.dir = dir;
 	return this;
 }
+// inherit stream duplex
+util.inherits( Deploy, Duplex );
 
 Deploy.prototype.isRepo = function ( repoName, callback ) {
 	fs.exists( this.dir + '/' + repoName, callback );
@@ -32,17 +37,13 @@ Deploy.prototype.cloneRepo = function ( repoPath, callback ) {
 		};
 
 	clone = spawn( 'git', ['clone', repoPath], opts );
-	clone.on( 'error', function ( e ) {
-		error = e;
-		console.log( 'Error:', e );
-	})
-	clone.stdout.on( 'data', function ( data ) {
-		console.log( 'stdout: ' + data );
-	})
-	clone.on("close", function ( ) { 
-		// install deps
-		callback ( error );
-	});
+	clone.on( 'error', function ( err ) {
+		this.emit('err', err )
+	}. bind( this ));
+	clone.stdout.pipe( this );
+	clone.on( 'close', function ( ) {
+		this.emit('close');
+	}. bind( this ));
 };
 
 Deploy.prototype.pullRepo = function ( repo, callback ) {
@@ -53,16 +54,13 @@ Deploy.prototype.pullRepo = function ( repo, callback ) {
 		};
 	
 	pull = spawn( 'git', [ 'pull', repo.path, repo.branch ], opts );
-	pull.on( 'error', function ( e ) {
-		error = e;
-		console.log( 'Error:', e );
-	})
-	pull.stdout.on( 'data', function ( data ) {
-		console.log( 'stdout: ' + data );
-	})
-	pull.on("close", function ( ) { 
-		callback ( error );
-	});
+	pull.on( 'error', function ( err ) {
+		this.emit('err', err )
+	}. bind( this ));
+	pull.stdout.pipe( this );
+	pull.on( 'close', function ( ) {
+		this.emit('close');
+	}. bind( this ));
 };
 
 Deploy.prototype.updateRepo = function ( repo, callback ) {
