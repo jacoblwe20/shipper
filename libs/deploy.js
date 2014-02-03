@@ -1,6 +1,7 @@
 var fs = require('fs'),
 	spawn = require('child_process').spawn,
-	Deps = require('./deps');
+	Deps = require('./deps'),
+	Startup = require('./startup');
 
 function Deploy ( dir ) {
 	this.dir = dir;
@@ -17,7 +18,11 @@ Deploy.prototype.handleUpdate = function ( callback ) {
 			callback( );
 		} );
 	}.bind( this );
-}
+};
+
+Deploy.prototype.startup = function ( callback ) {
+	var startup = new Startup( this.dir + '/' + this.repo, callback );
+};
 
 Deploy.prototype.cloneRepo = function ( repoPath, callback ) {
 	var error,
@@ -65,9 +70,13 @@ Deploy.prototype.updateRepo = function ( repo, callback ) {
 	this.repo = repo.repo;
 	this.isRepo( repo.repo, function ( isRepo ) {
 		if ( isRepo ) {
-			return this.pullRepo( repo, this.handleUpdate( callback ) ) 
+			return this.pullRepo( repo, this.handleUpdate( function ( ) {
+				this.startup( callback );
+			}.bind( this ) )); 
 		}
-		this.cloneRepo( repo.path , this.handleUpdate( callback ) );
+		this.cloneRepo( repo.path , this.handleUpdate( function ( ) {
+			this.startup( callback );
+		}.bind( this ) ));
 	}.bind( this ))
 };
 

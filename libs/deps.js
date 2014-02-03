@@ -1,5 +1,4 @@
 var spawn = require('child_process').spawn;
-var execute = require('child_process').exec;
 
 function Deps ( url, callback ) {
 	this.url = url;
@@ -39,6 +38,6 @@ Deps.prototype.removeDeps = function ( callback ) {
 		console.log('close');
 		callback( );
 	});
-};
+};           
 
 module.exports = Deps;
