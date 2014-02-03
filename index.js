@@ -6,7 +6,6 @@ var pushover = require('pushover'),
 	deploydir = __dirname + process.env.DEPLOYS,
 	repos = pushover( repodir );
 	deploy = new (require('./libs/deploy'))( deploydir );
-	// add lib to deploy
 
 repos.on('push', function (push) {
     console.log('push ' + push.repo + '/' + push.commit
