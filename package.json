@@ -1,6 +1,6 @@
 {
   "name": "shipper",
-  "version": "0.0.0",
+  "version": "0.0.3",
   "description": "a small app to deploy node apps based off git pushes",
   "main": "index.js",
   "scripts": {
