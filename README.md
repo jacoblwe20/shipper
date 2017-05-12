@@ -1,5 +1,7 @@
 ## Shipper
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/jcblw/shipper.svg)](https://greenkeeper.io/)
+
 a simple app to deploy apps based off a push, at its current state it will accept pushed clone them into a working directory, install a fresh set of dependecies and then attempt to startup the app. Still `This is very early in development`.
 
 ## Install
